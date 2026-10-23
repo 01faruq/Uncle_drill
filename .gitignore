@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.venv/
+__pycache__/
+
+# Next.js & Build Artifacts
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+
+# Environment & Secrets (CRITICAL: NEVER COMMIT REAL KEYS)
+.env
+.env.*
+!.env.example
+
+# Supabase Local & Temp
+supabase/.branches
+supabase/.temp
+
+# Testing & Coverage
+coverage/
+playwright-report/
+test-results/
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.log
+# Deployment & Keys
+.vercel
+*.pem
+.vscode/
+.idea/

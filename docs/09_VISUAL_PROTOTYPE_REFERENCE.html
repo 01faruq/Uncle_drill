@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UNCLE DRILL // Interactive UI System Preview (v1.0)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Silkscreen:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #060607;
+      --bg-surface: #0C0C0E;
+      --bg-elevated: #121216;
+      --border-grid: #27272C;
+      --border-subtle: #1A1A1E;
+      --text-primary: #F4F4F0;
+      --text-secondary: #A1A1AA;
+      --text-muted: #52525B;
+      --signal-cta: #D4FF00;
+      --signal-pass: #00FF66;
+      --signal-warn: #FF9500;
+      --signal-fault: #FF2E2E;
+      --signal-info: #00E5FF;
+      --paper-canvas: #EAE6DF;
+      --paper-ink: #0A0A0B;
+      --paper-border: #BDB7AD;
+      --font-display: 'Silkscreen', monospace;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0px !important; }
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* TOP GOD-MODE VIEW SWITCHER BAR */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-grid);
+      background: var(--bg-canvas);
+      height: 42px;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .brand {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-dot { width: 8px; height: 8px; background: var(--signal-cta); display: inline-block; }
+    .nav-tabs { display: flex; height: 100%; }
+    .nav-tab {
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      border-left: 1px solid var(--border-grid);
+      padding: 0 16px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      height: 100%;
+      transition: all 0.1s steps(2);
+    }
+    .nav-tab:hover { color: var(--text-primary); background: var(--bg-elevated); }
+    .nav-tab.active {
+      color: var(--bg-canvas);
+      background: var(--signal-cta);
+      font-weight: 700;
+    }
+
+    /* STRUCTURAL 1PX HAIRLINE GRID */
+    .viewport { flex: 1; overflow-y: auto; position: relative; }
+    .screen { display: none; min-height: 100%; }
+    .screen.active { display: block; }
+    .grid-container {
+      display: grid;
+      background-color: var(--border-grid);
+      gap: 1px;
+      border-bottom: 1px solid var(--border-grid);
+    }
+    .cell {
+      background-color: var(--bg-surface);
+      padding: 24px;
+      position: relative;
+    }
+    .cell-dark { background-color: var(--bg-canvas); }
+    .dot-matrix {
+      background-image: radial-gradient(#27272C 1px, transparent 1px);
+      background-size: 16px 16px;
+    }
+
+    /* HUD BRACKETS & LABELS */
+    .hud-bracket {
+      color: var(--signal-warn);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      display: inline-block;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .hud-bracket::before { content: "⌈ "; }
+    .hud-bracket::after { content: " ⌋"; }
+    .mono-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .display-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      line-height: 1.08;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+    .pixel-num {
+      font-family: var(--font-display);
+      font-size: 36px;
+      line-height: 1;
+      color: var(--text-primary);
+    }
+    .ascii-wave {
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: 2px;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 6px 16px;
+      border-bottom: 1px solid var(--border-grid);
+      background: var(--bg-canvas);
+    }
+
+    /* BUTTONS */
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 12px 20px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-acid {
+      background: var(--signal-cta);
+      color: var(--bg-canvas);
+    }
+    .btn-acid:hover {
+      background: var(--text-primary);
+      color: var(--bg-canvas);
+    }
+    .btn-ghost {
+      background: var(--bg-canvas);
+      color: var(--text-primary);
+      border: 1px solid var(--border-grid);
+    }
+    .btn-ghost:hover { border-color: var(--text-primary); }
+
+    /* SCREEN 3: 3-PANEL DRILL ROOM */
+    .drill-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr 290px;
+      height: calc(100vh - 70px);
+      background: var(--border-grid);
+      gap: 1px;
+    }
+    .panel {
+      background: var(--bg-canvas);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+    .panel-header {
+      height: 36px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-grid);
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .chat-stream {
+      flex: 1;
+      padding: 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .msg-uncle {
+      border-left: 2px solid var(--signal-warn);
+      padding-left: 10px;
+      color: var(--text-primary);
+    }
+    .msg-student {
+      border-left: 2px solid var(--text-muted);
+      padding-left: 10px;
+      color: var(--text-secondary);
+    }
+    .terminal-box {
+      flex: 1;
+      background: #030304;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      overflow-y: auto;
+      color: #E4E4E7;
+    }
+    .cmd-line { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+    .cmd-input {
+      background: transparent;
+      border: none;
+      color: var(--signal-pass);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      flex: 1;
+      outline: none;
+    }
+
+    /* SCREEN 5: BONE PAPER DOSSIER (OFF-GRID OBJECT 08 STYLE) */
+    .paper-dossier {
+      background: var(--paper-canvas);
+      color: var(--paper-ink);
+      max-width: 960px;
+      margin: 32px auto;
+      border: 1px solid var(--paper-ink);
+      display: grid;
+      grid-template-columns: 240px 1fr 180px;
+    }
+    .paper-cell {
+      padding: 24px;
+      border-right: 1px solid var(--paper-border);
+      border-bottom: 1px solid var(--paper-border);
+    }
+    .barcode {
+      height: 54px;
+      background: repeating-linear-gradient(90deg, #0A0A0B 0px, #0A0A0B 3px, transparent 3px, transparent 6px, #0A0A0B 6px, #0A0A0B 7px, transparent 7px, transparent 11px);
+      margin-top: 16px;
+    }
+
+    /* BOTTOM TELEMETRY FOOTER */
+    .bottom-bar {
+      height: 28px;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-grid);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .status-pill { color: var(--signal-pass); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- TOP NAVIGATION & GOD-MODE SWITCHER -->
+  <header class="top-bar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      UNCLE_DRILL // v1.0
+      <span style="color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;">[GOD_MODE_PREVIEW]</span>
+    </div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="switchScreen('landing', this)">01 // Landing</button>
+      <button class="nav-tab" onclick="switchScreen('roadmap', this)">02 // Roadmap Grid</button>
+      <button class="nav-tab" onclick="switchScreen('drill', this)">03 // Drill Room (IDE)</button>
+      <button class="nav-tab" onclick="switchScreen('admin', this)">04 // B2B & Super Admin</button>
+      <button class="nav-tab" onclick="switchScreen('dossier', this)">05 // Bone-Paper Certificate</button>
+    </nav>
+  </header>
+
+  <main class="viewport">
+
+    <!-- ==================== SCREEN 1: LANDING MANIFESTO ==================== -->
+    <section id="screen-landing" class="screen active">
+      <div class="ascii-wave">
+        LIVE_AUDIT_FEED /\_/\_/\_/\_ [22:14:09] TUNDE_K FAILED MILESTONE 1.1 (FORGOT SET -EUO PIPEFAIL) • [22:15:02] AISHAT_B PASSED MILESTONE 1.2 REFLOG RESCUE IN 84s /\_/\_/\_/\_
+      </div>
+      <div class="grid-container" style="grid-template-columns: 1.3fr 1fr;">
+        <div class="cell cell-dark dot-matrix" style="padding: 48px;">
+          <span class="hud-bracket">MASTERY AUDIT & ACCOUNTABILITY ENGINE</span>
+          <h1 class="display-title">YOU CAN LIE TO THE WORLD.<br/>NOT TO THIS TERMINAL.</h1>
+          <p style="font-family: var(--font-sans); font-size: 15px; color: var(--text-secondary); max-width: 58ch; margin-bottom: 28px; line-height: 1.65;">
+            Every other platform treats you like a fragile princess with bite-sized hints while you vibe-code yourself into obsolescence. <strong>Uncle Drill is not a course platform.</strong> We give you the mental model and primary docs for free. You come here to get audited in a locked Linux sandbox by an AI Uncle who watches every command you type.
+          </p>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <button class="btn btn-acid" onclick="switchScreen('drill', document.querySelectorAll('.nav-tab')[2])">[ DRILL ME NOW -> ]</button>
+            <button class="btn btn-ghost" onclick="switchScreen('roadmap', document.querySelectorAll('.nav-tab')[1])">> INSPECT 5-PHASE SYLLABUS</button>
+          </div>
+        </div>
+
+        <div class="cell" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="mono-label">LIVE TELEMETRY INTERCEPT // MILESTONE 1.1</span>
+            <div style="background: #040405; border: 1px solid var(--border-grid); padding: 16px; margin-top: 8px;">
+              <div style="color: var(--text-muted); margin-bottom: 8px;">user@uncle-sandbox ~ $ ./log_analyzer.sh > out.txt</div>
+              <div style="color: var(--signal-fault); margin-bottom: 12px;">[20:17:21] GATE_1_FAULT: stderr (fd 2) leaked to screen. Exit code: 0 on missing file.</div>
+              <div style="border-left: 2px solid var(--signal-warn); padding-left: 12px; color: var(--text-primary);">
+                <strong style="color: var(--signal-warn);">UNCLE DRILL [ROAST LVL 2]:</strong><br/>
+                "Chinedu. Look at your screen. You had seven days to learn standard streams, and you still don't know why <code>&gt; out.txt</code> only redirects file descriptor 1? Even a plumber understands pipes better than this. Open <code>man bash</code> before I price a table for you at Computer Village."
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-container" style="grid-template-columns: repeat(3, 1fr); margin-top: 24px; border: 1px solid var(--border-grid);">
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">AI POLICY (PHASE 1-2)</span>
+              <div class="pixel-num" style="font-size: 24px; color: var(--signal-fault);">0% AI</div>
+            </div>
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">MONTHLY B2C ACCESS</span>
+              <div class="pixel-num" style="font-size: 24px; color: var(--signal-cta);">₦1,000</div>
+            </div>
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">B2B COHORT VERIFIED</span>
+              <div class="pixel-num" style="font-size: 24px; color: var(--signal-pass);">100%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 2: ROADMAP GRID ==================== -->
+    <section id="screen-roadmap" class="screen">
+      <div class="ascii-wave">
+        PHASE_01 // LINUX, GIT & INDUSTRIAL PYTHON /\_/\_/\_ CONTRACT: 8 HRS/WK • NEXT DRILL WINDOW: THU 20:00 UTC • MULTIPLIER: 1.4x GRIT XP
+      </div>
+      <div class="grid-container" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="cell">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span class="mono-label" style="color: var(--signal-pass);">MILESTONE 1.1 // DONE</span>
+            <span class="pixel-num">01</span>
+          </div>
+          <h3 style="font-size: 15px; margin: 12px 0 8px;">UBUNTU SERVER SURVIVAL</h3>
+          <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 16px;">stdin/stdout/stderr (2>&1), exit codes ($?), set -euo pipefail, grep/jq, permissions.</p>
+          <div style="border-top: 1px solid var(--border-grid); padding-top: 12px; font-size: 11px; color: var(--text-muted);">
+            DISASTER CASE: 2017 GitLab 300GB rm -rf Production Wipe
+          </div>
+        </div>
+
+        <div class="cell" style="border: 1px solid var(--signal-cta);">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span class="mono-label" style="color: var(--signal-cta);">MILESTONE 1.2 // ACTIVE</span>
+            <span class="pixel-num" style="color: var(--signal-cta);">02</span>
+          </div>
+          <h3 style="font-size: 15px; margin: 12px 0 8px;">GIT INTERNALS & DAGS</h3>
+          <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 16px;">Blobs/trees, HEAD vs Index, reset --hard vs revert, rebase -i, live reflog rescue.</p>
+          <button class="btn btn-acid" style="width: 100%; justify-content: center; padding: 8px;" onclick="switchScreen('drill', document.querySelectorAll('.nav-tab')[2])">[ DRILL ME -> ]</button>
+        </div>
+
+        <div class="cell">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span class="mono-label">MILESTONE 1.3 // LOCKED</span>
+            <span class="pixel-num" style="color: var(--text-muted);">03</span>
+          </div>
+          <h3 style="font-size: 15px; margin: 12px 0 8px;">PROCEDURAL PYTHON & PDB</h3>
+          <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 16px;">Pass-by-object-reference, mutability traps, argparse, logging, pdb bug hunt.</p>
+          <div style="border-top: 1px solid var(--border-grid); padding-top: 12px; font-size: 11px; color: var(--text-muted);">
+            PROJECT: budget_cli.py + Broken Repo Audit
+          </div>
+        </div>
+
+        <div class="cell">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span class="mono-label">MILESTONE 1.4 // LOCKED</span>
+            <span class="pixel-num" style="color: var(--text-muted);">04</span>
+          </div>
+          <h3 style="font-size: 15px; margin: 12px 0 8px;">2026 PYTHON: UV, RUFF, MYPY</h3>
+          <p style="color: var(--text-secondary); font-size: 12px; margin-bottom: 16px;">Composition over inheritance, @dataclass, typing.Protocol, pytest parameterized gates.</p>
+          <div style="border-top: 1px solid var(--border-grid); padding-top: 12px; font-size: 11px; color: var(--text-muted);">
+            GATE 1: uv run mypy --strict && pytest --cov=85
+          </div>
+        </div>
+      </div>
+
+      <!-- ARCHIVE / PHASES 2-5 TABLE (DEEP SCRAPE STYLE) -->
+      <div class="cell cell-dark">
+        <span class="mono-label">CURRICULUM ARCHIVE // PHASES 02 TO 05 [UNLOCKS AFTER PHASE 01 CHECKPOINT]</span>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-grid); color: var(--text-muted); text-align: left;">
+              <th style="padding: 8px 0;">PHASE</th>
+              <th>CORE DOMAIN</th>
+              <th>SIGNATURE SANDBOX DRILL</th>
+              <th>AI POLICY</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 10px 0; color: var(--signal-info);">PHASE 02</td>
+              <td>C Pointers, Stack/Heap, DSA & PostgreSQL Internals</td>
+              <td>20-Thread Double-Spend Race Condition & EXPLAIN ANALYZE (&lt;5ms)</td>
+              <td>STRICT_NO_AI</td>
+              <td style="color: var(--text-muted);">[LOCKED]</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 10px 0; color: var(--signal-info);">PHASE 03</td>
+              <td>AsyncIO Event Loop, FastAPI & SQLAlchemy 2.0</td>
+              <td>"Spot the AI Slop" 180-Line PR Audit (N+1 & Webhook HMAC)</td>
+              <td>CONTROLLED_AI</td>
+              <td style="color: var(--text-muted);">[LOCKED]</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <td style="padding: 10px 0; color: var(--signal-info);">PHASE 04</td>
+              <td>Multi-Stage Docker, CI/CD, Redis & Cloud Capstone</td>
+              <td>Live Chaos Drill: Redis Container Killed Under 200 req/s Load</td>
+              <td>CONTROLLED_AI</td>
+              <td style="color: var(--text-muted);">[LOCKED]</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; color: var(--signal-info);">PHASE 05</td>
+              <td>Polyglot Systems Mastery (Track A: Go / Track B: Rust)</td>
+              <td>Rebuild Concurrent Worker Pool (Go) or RESP Parser (Rust)</td>
+              <td>PRINCIPAL_DEFENSE</td>
+              <td style="color: var(--text-muted);">[LOCKED]</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 3: 3-PANEL DRILL ROOM ==================== -->
+    <section id="screen-drill" class="screen">
+      <div class="drill-layout">
+        <!-- LEFT PANEL: UNCLE DRILL CHAT & ROAST SELECTOR -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>UNCLE_DRILL // GATE 03</span>
+            <select id="roast-select" onchange="updateRoastPreview()" style="background: var(--bg-canvas); color: var(--signal-warn); border: 1px solid var(--border-grid); font-family: var(--font-mono); font-size: 10px; padding: 2px 4px;">
+              <option value="1">ROAST LVL 1: MENTOR</option>
+              <option value="2" selected>ROAST LVL 2: STRICT UNCLE</option>
+              <option value="3">ROAST LVL 3: NO MERCY</option>
+            </select>
+          </div>
+          <div class="chat-stream" id="chat-stream">
+            <div style="font-size: 11px; color: var(--signal-pass);">[SYSTEM] Gate 1 & Gate 2 Deterministic Checks: PASSED.</div>
+            <div class="msg-uncle" id="uncle-dynamic-msg">
+              <div style="font-size: 10px; color: var(--signal-warn); margin-bottom: 4px;">⌈ SKEPTICAL_SQUINT • MOVE: QUESTION_DODGE_TRAP ⌋</div>
+              "Wait, bro. I asked you two questions: (1) the difference between <code>stdout</code> and <code>stderr</code>, and (2) why <code>false | echo 'ok'</code> returns exit code 0 without <code>pipefail</code>. You only answered the first one and acted like you didn't see the second. Answer Question 2 right now before we talk about anything else."
+            </div>
+          </div>
+          <div style="padding: 10px; border-top: 1px solid var(--border-grid); background: var(--bg-surface);">
+            <input type="text" placeholder="Defend your implementation to Uncle Drill... [ENTER]" style="width: 100%; background: var(--bg-canvas); border: 1px solid var(--border-grid); color: var(--text-primary); padding: 10px; font-family: var(--font-mono); font-size: 12px;" />
+          </div>
+        </div>
+
+        <!-- CENTER PANEL: LIVE SIMULATED LINUX TERMINAL -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>SANDBOX // v86_WASM_LINUX (log_analyzer.sh)</span>
+            <span style="color: var(--signal-cta);">TIMER: 18:42</span>
+          </div>
+          <div class="terminal-box" id="term-output">
+            <div style="color: var(--text-muted);">Uncle Drill Isolated Linux Sandbox v1.0 (--network=none)</div>
+            <div style="color: var(--text-muted);">Type 'help', 'ls', 'cat log_analyzer.sh', or 'verify' below to test the terminal feel:</div>
+            <br/>
+            <div><span style="color: var(--signal-pass);">student@uncle-drill:~$</span> head -n 4 log_analyzer.sh</div>
+            <div style="color: #A1A1AA;">#!/usr/bin/env bash<br/>set -euo pipefail<br/>LOG_FILE="${1:-}"</div>
+            <div class="cmd-line">
+              <span style="color: var(--signal-pass);">student@uncle-drill:~$</span>
+              <input type="text" id="term-input" class="cmd-input" value="verify --gate=1" onkeydown="if(event.key==='Enter') runTerminalCmd()" autofocus />
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: OFFLINE MAN PAGES & TELEMETRY -->
+        <div class="panel">
+          <div class="panel-header">
+            <span>OFFLINE_DOCS // MAN_PAGES</span>
+            <span style="color: var(--signal-info);">+PROCESS_XP_ACTIVE</span>
+          </div>
+          <div style="padding: 14px; overflow-y: auto; flex: 1;">
+            <span class="mono-label">MAN BASH(1) // SHELL BUILTIN: SET</span>
+            <p style="font-family: var(--font-sans); font-size: 12.5px; color: var(--text-secondary); margin-bottom: 14px;">
+              <strong>-e</strong>: Exit immediately if a pipeline returns a non-zero status.<br/><br/>
+              <strong>-u</strong>: Treat unset variables and parameters as an error when performing parameter expansion.<br/><br/>
+              <strong>-o pipefail</strong>: Return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status, or zero if all commands exit successfully.
+            </p>
+            <div style="border-top: 1px solid var(--border-grid); padding-top: 12px; margin-top: 12px;">
+              <span class="mono-label">LIVE TELEMETRY BUFFER (3.1 KB / 5.0 KB)</span>
+              <div style="font-size: 11px; color: var(--text-muted);">
+                [22:18:02] CMD: head -n 4 log_analyzer.sh (exit=0)<br/>
+                [22:18:10] DOC_OPEN: man_bash_set (+15 Process XP)<br/>
+                [22:18:19] TAB_BLUR: 0ms (Clean Focus)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 4: B2B & SUPER ADMIN ==================== -->
+    <section id="screen-admin" class="screen">
+      <div class="grid-container" style="grid-template-columns: 1fr 1fr;">
+        <div class="cell">
+          <span class="hud-bracket">B2B SPONSOR PORTAL // LEARN2EARN COHORT 01</span>
+          <h2 class="display-title" style="font-size: 26px;">COHORT VERIFICATION MATRIX</h2>
+          <div class="grid-container" style="grid-template-columns: repeat(3, 1fr); margin: 16px 0; border: 1px solid var(--border-grid);">
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">SPONSORED FELLOWS</span>
+              <div class="pixel-num" style="font-size: 28px;">150</div>
+            </div>
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">VERIFIED NO-AI PASS</span>
+              <div class="pixel-num" style="font-size: 28px; color: var(--signal-pass);">118</div>
+            </div>
+            <div class="cell" style="padding: 14px;">
+              <span class="mono-label">CAUGHT BY ANTI-CHEAT</span>
+              <div class="pixel-num" style="font-size: 28px; color: var(--signal-fault);">14</div>
+            </div>
+          </div>
+          <p style="color: var(--text-secondary); font-size: 12px;">Active Cohort Code: <code>L2E-FELLOW-2026</code> • Auto-Revoke after 7 days inactivity: <strong>ENABLED</strong></p>
+        </div>
+
+        <div class="cell">
+          <span class="hud-bracket">FOUNDER SUPER-ADMIN // APOLOGY LETTER QUEUE</span>
+          <h2 class="display-title" style="font-size: 26px;">SUSPENDED CHEATER APPEALS</h2>
+          <div style="border: 1px solid var(--border-grid); padding: 14px; background: var(--bg-canvas); margin-top: 12px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+              <strong style="color: var(--signal-info);">USER: @emeka_dev (Milestone 1.2)</strong>
+              <span style="color: var(--signal-pass); font-size: 11px;">[STATUS: AI_SCREENED_GENUINE]</span>
+            </div>
+            <p style="font-family: var(--font-sans); font-size: 12.5px; color: var(--text-secondary); margin-bottom: 12px;">
+              "I switched tabs twice during Gate 2 because I forgot the git reflog syntax and panicked when the timer hit 4 minutes. I realize taking shortcuts is why I failed before. I have practiced in Bandit and won't switch tabs again."
+            </p>
+            <div style="display:flex; gap: 8px;">
+              <button class="btn btn-acid" style="padding: 6px 12px; font-size: 11px;">[ APPROVE UNBAN ]</button>
+              <button class="btn btn-ghost" style="padding: 6px 12px; font-size: 11px; color: var(--signal-fault);">[ REJECT + 48H ]</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCREEN 5: BONE PAPER DOSSIER ==================== -->
+    <section id="screen-dossier" class="screen" style="background: #141416; padding: 16px;">
+      <div class="paper-dossier">
+        <div class="paper-cell">
+          <div style="font-size: 10px; letter-spacing: 0.12em;">OBJECT 01 // PROOF OF WORK</div>
+          <div style="font-family: var(--font-display); font-size: 28px; margin-top: 16px;">01</div>
+          <div style="font-size: 11px; font-weight: 700; margin-top: 4px;">LINUX & GIT CORE</div>
+          <div style="font-size: 10px; margin-top: 4px;">100% NO-AI SANDBOX</div>
+          <hr style="border: none; border-top: 1px solid var(--paper-border); margin: 16px 0;" />
+          <div style="font-family: var(--font-display); font-size: 28px;">02</div>
+          <div style="font-size: 11px; font-weight: 700; margin-top: 4px;">REFLOG RESCUE</div>
+          <div style="font-size: 10px; margin-top: 4px;">COMPLETED IN 88s</div>
+        </div>
+
+        <div class="paper-cell">
+          <div style="display:flex; justify-content:space-between;">
+            <span style="font-family: var(--font-display); font-size: 24px;">UNCLE DRILL // VERIFIED DOSSIER</span>
+            <span style="border: 1px solid #0A0A0B; padding: 4px 8px; font-size: 10px; font-weight: 700;">ID_PROCTORED</span>
+          </div>
+          <div style="margin: 28px 0;">
+            <div style="font-size: 11px; letter-spacing: 0.1em;">ENGINEER CANDIDATE</div>
+            <div style="font-family: var(--font-display); font-size: 32px;">IBRAHIM // KWARA_NG</div>
+          </div>
+          <p style="font-family: var(--font-sans); font-size: 13px; line-height: 1.6;">
+            This dossier certifies that the candidate defended all Phase 1 Must-Know and May-Know engineering rubrics inside an isolated, zero-AI Linux sandbox with <strong>00 Cheat Strikes</strong>.
+          </p>
+          <div class="barcode"></div>
+          <div style="font-size: 10px; margin-top: 4px;">SHA256: 9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08</div>
+        </div>
+
+        <div class="paper-cell" style="border-right: none; display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size: 10px;">GRIT CONSISTENCY</div>
+            <div style="background: #0A0A0B; color: #EAE6DF; padding: 6px; font-weight: 700; margin-top: 4px;">1.8x MULTIPLIER</div>
+          </div>
+          <div>
+            <div style="font-size: 10px;">MUST-KNOW SCORE</div>
+            <div style="font-family: var(--font-display); font-size: 36px; color: #0088AA;">100%</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PERSISTENT BOTTOM IDE STATUS BAR -->
+  <footer class="bottom-bar">
+    <div>
+      <span class="status-pill">● ONLINE (3G GRACE READY)</span> &nbsp;|&nbsp;
+      SANDBOX: v86_WASM_LINUX &nbsp;|&nbsp;
+      CHEAT STRIKES: 0/2
+    </div>
+    <div>
+      URL_STATE: <span id="url-indicator">?screen=landing&roast=2</span> &nbsp;|&nbsp;
+      QUOTA: 7/8 DRILLS LEFT &nbsp;|&nbsp;
+      <strong>[REPORT BUG / FEEDBACK]</strong>
+    </div>
+  </footer>
+
+  <script>
+    function switchScreen(id, btn) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+      document.getElementById('screen-' + id).classList.add('active');
+      if (btn) btn.classList.add('active');
+      document.getElementById('url-indicator').textContent = '?screen=' + id + '&roast=' + document.getElementById('roast-select').value;
+    }
+
+    function updateRoastPreview() {
+      const lvl = document.getElementById('roast-select').value;
+      const box = document.getElementById('uncle-dynamic-msg');
+      if (lvl === '1') {
+        box.innerHTML = '<div style="font-size: 10px; color: var(--signal-info); margin-bottom: 4px;">⌈ CONSTRUCTIVE_MENTOR • LEVEL 01 ⌋</div>"You answered Question 1 on stdout vs stderr accurately, but you skipped Question 2 regarding pipefail. Please explain why <code>false | echo \'ok\'</code> exits with 0 before we proceed."';
+      } else if (lvl === '2') {
+        box.innerHTML = '<div style="font-size: 10px; color: var(--signal-warn); margin-bottom: 4px;">⌈ SKEPTICAL_SQUINT • MOVE: QUESTION_DODGE_TRAP ⌋</div>"Wait, bro. I asked you two questions and you only answered the easy one like I wouldn\'t notice. Answer Question 2 on <code>pipefail</code> right now before we talk about anything else."';
+      } else {
+        box.innerHTML = '<div style="font-size: 10px; color: var(--signal-fault); margin-bottom: 4px;">⌈ FULL_ROAST_FIRE • LEVEL 03 NO MERCY ⌋</div>"Chinedu. Look at me. I asked you two questions and you cherry-picked Question 1 like you are selecting meat at a naming ceremony. Who are you playing with? Explain <code>pipefail</code> right now or I fail this session!"';
+      }
+    }
+
+    function runTerminalCmd() {
+      const input = document.getElementById('term-input');
+      const out = document.getElementById('term-output');
+      const cmd = input.value.trim();
+      const line = document.createElement('div');
+      line.innerHTML = '<span style="color: var(--signal-pass);">student@uncle-drill:~$</span> ' + cmd + '<br/><span style="color: var(--signal-cta);">[GATE_1_VERIFIER] Checking set -euo pipefail... OK (Exit=0). Ready for Uncle Drill Defense.</span>';
+      out.insertBefore(line, input.parentElement);
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
