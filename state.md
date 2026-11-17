@@ -1,43 +1,46 @@
 # UNCLE DRILL — LIVE ENGINEERING BLACKBOARD (`state.md`)
 
-**Current Active Slice:** `SLICE_0_VISUAL_DESIGN_SYSTEM_AND_SHOWCASE`  
-**Active Sub-Task:** `0.1 - Initialize Next.js 15 + Fonts + Dual-Theme Tokens + Signature Industrial Primitives`  
-**Last Verified Build Status:** `GREEN (Ready for Slice 0 Execution)`
+**Current Active Pillar:** `PILLAR_4_STUDY_CHAT_AND_TOKEN_BUDGET` [PENDING]  
+**Active Sub-Task:** `PILLAR 3 COMPLETE -> READY FOR PILLAR 4 (Uncle Drill Study Chat & Token Budget)`  
+**Last Verified Build Status:** `GREEN (57/57 Tests Passing, check-ui-slop.sh Passing, npm run build 12/12 Routes 0 Errors, Dev Server 200 OK)`
 
 ---
 
-## Active Roadmap & Vertical Slice Checklist
+## Canonical V1 6-Pillar Roadmap
 
-### [IN_PROGRESS] SLICE 0: Visual Design System, Dual Theme & Showcase Prototype
-- [ ] **0.1:** Scaffold Next.js 15 (App Router, TypeScript), install `nuqs`, `zod`, `@t3-oss/env-nextjs`, `lucide-react`, and configure `Departure Mono`, `Geist Mono`, and `Geist Sans` fonts + Dual-Theme CSS tokens (`OBSIDIAN_DARK` default + `BLUEPRINT_PAPER` light mode toggle) from `docs/06_UI_DESIGN_SYSTEM.md`.
-- [ ] **0.2:** Build the 6 Signature Industrial UI Primitives in `src/components/ui/industrial/`:
-  - `<StructuralGrid />` & `<GridCell />` (1px `#27272C` / `#BDB7AD` hairline grid)
-  - `<HudBracketHeader />` (`⌈ TEXT ⌋` in `#FF9500` / `#F4F4F0`)
-  - `<AsciiDivider />` (Waveform `/\_/\_` and dashed terminal dividers)
-  - `<DrillButton />` (`acid` `#D4FF00` primary CTA and `terminal` ghost variants, `0px` radius)
-  - `<TelemetryLogStream />` (Timestamped `[20:17:21]` live log viewer)
-  - `<BottomTelemetryBar />` (Fixed 28px IDE status footer with Theme & God-Mode switcher)
-- [ ] **0.3:** Build the 7-Section Public Landing Page (`/`) with live Roast Ticker, interactive 60-second Mini-Drill, "Princess Problem" comparison matrix, 5-Phase syllabus preview, and ₦10,000 Anchor Pricing + Promo Code preview.
-- [ ] **0.4:** Create `/design-system` visual verification route + Mint-Grade Sovereign Certificate preview (`/verify/demo`) + write `docs/implementation-log/SLICE_0_IMPLEMENTATION.md` and update `README.md`.
+### [COMPLETED] PILLAR 1: Master Landing Page & Visual Design System
+- [x] **1.1:** Scaffold Next.js 15 (App Router, TypeScript), configure Industrial Terminal tokens & Obsidian Dark / Blueprint Light modes.
+- [x] **1.2:** Build Industrial UI Primitives (`<StructuralGrid>`, `<GridCell>`, `<HUDHeader>`, `<StatusBadge>`).
+- [x] **1.3:** Master Landing Page with Founder 10-Section Blueprint (`src/app/(marketing)/page.tsx`).
+- [x] **1.4:** Interactive Roast Level selector (`[ LVL 1 ]`, `[ LVL 2 ]`, `[ LVL 3 ]`), desktop HUD section scrubber, dynamic terminal typing, and verified zero slop.
 
-### [PENDING] SLICE 1: Auth, Database Schema (0001 + 0002), RLS & No-Code Founder Command Room (`/command`)
-- [ ] **1.1:** Apply migrations `0001_initial_schema.sql` and `0002_dual_brain_and_command_room.sql` (Tables, Dual-Ledger memory columns, 4-Pillar scoring, RLS policies, atomic quota RPC).
-- [ ] **1.2:** Build Email + GitHub OAuth authentication flows and Adaptive Viewport Guard (locking `/drill/*` on mobile `< 1024px` with `⌈ DESKTOP TERMINAL REQUIRED ⌋` HUD while routing mobile users to Study Room & Field Manuals).
-- [ ] **1.3:** Build the No-Code Founder Command Room (`/command`) for managing `platform_settings` (pricing, promo/sponsor/god-mode codes, user access overrides, AI model router switchboard, and Apology Letter approvals).
+### [COMPLETED] PILLAR 2: Auth, Onboarding & `/command` Control Room
+- [x] **2.1:** Migrations `0001_initial_schema.sql` and `0002_dual_brain_and_command_room.sql` (Tables, Dual-Ledger memory columns, 4-Pillar scoring, RLS policies, atomic quota RPC).
+- [x] **2.2:** Build Email + Google/GitHub OAuth authentication flows, URL-synced 3-Question Onboarding (`/onboarding?step=1|2|3`), Next.js Edge Middleware (`supabase.auth.getUser()`), and Adaptive Viewport Guard (`<DesktopDrillGuard />` locking `/drill/*` on viewports `< 1024px` with `⌈ DESKTOP TERMINAL REQUIRED ⌋` HUD).
+- [x] **2.3:** Build No-Code Founder Control Room (`/command`) with URL-synced tabs (`overview`, `users`, `codes`, `cms`, `ai`), live switches, and strict Founder/SuperAdmin authorization.
+- [x] **2.4:** Permanent UX/Security Guardrails: Role-gated `[ COMMAND ROOM ]` button on `/roadmap`, Zero Telemetry Spoilers Law, automated slop linter checks.
 
-### [PENDING] SLICE 2: The 5-Phase Roadmap, Downloadable Field Manuals & Uncle's Study Room
-- [ ] **2.1:** Seed `curriculum_public`, `curated_resources`, and `audit_rubrics_private` with Phase 1 full rubrics (`Non-Negotiables` & `Stress-Test Questions`) and Phases 2–5 roadmap metadata.
-- [ ] **2.2:** Build `/roadmap` with `nuqs` URL-synced Phase tabs, Milestone Grid, downloadable **Field Manual & Pre-Flight Checklist** (`.md`/PDF), and Hybrid Commitment Contract modal.
-- [ ] **2.3:** Build **Uncle's Study Room** (proactive Socratic mentor chat on Mobile & Desktop powered by Groq/Gemini, Dual-Ledger memory extraction, and Voice Note input/output).
+### [COMPLETED] PILLAR 3: Task, Resource, Downloadable PDF Field Manual & Pre-Drill Checklist Hub
+- [x] **3.1:** Seed Canonical Phase 1 Milestones (1.1, 1.2, 1.3, 1.4) and Curated Resources in Supabase (`curriculum_public` & `curated_resources`) with embedded fallback seed data (`src/lib/data/curriculum.ts` and `0003_seed_curriculum.sql`).
+- [x] **3.2:** Interactive `/roadmap` Workspace displaying all 5 Phases, Milestone status badges, checklist progress (`X/Y Items Ready`), and routes to `/milestone/[milestoneId]` and `/study/[milestoneId]`.
+- [x] **3.3:** Dedicated Task, Resource & Checklist Page (`/milestone/[milestoneId]`):
+  - Real-World Production Disaster Case & Why It Matters.
+  - First-Principles Mental Model & Practice Project + explicit "Explore Beyond" callout.
+  - Curated Multi-Modal Resource Vault (`curated_resources`).
+  - 1-Click Printable/Downloadable PDF Field Manual (`[ DOWNLOAD FIELD MANUAL (.PDF) ]`) in `#EAE6DF` Blueprint Paper style.
+  - Interactive Gatekeeper Checklist (`Basic` -> `Required` -> `Explore Beyond`) with dual-persistence (`localStorage` + Server Action `profiles.learning_dna`).
+  - **Hard Gatekeeper Lock:** `[ PROCEED TO DRILL ROOM -> ]` remains locked (`disabled`) until 100% of required checklist items are checked. Once 100% checked, turns Acid Lime (`#D4FF00`) and unlocks navigation to `/drill/[milestoneId]`.
 
-### [PENDING] SLICE 3: The 3-Panel Drill Room (`v86` + `xterm.js` + `Monaco`) & Anti-Cheat Buffer
-- [ ] **3.1:** Build the Desktop-Locked 3-Panel Drill Room (`/drill/[milestoneId]`) with `xterm.js` + `v86` Wasm Linux, `Monaco Editor`, Voice Note mic button, and offline `man` page viewer.
-- [ ] **3.2:** Implement the `<5KB` Telemetry Ring-Buffer, Tab-Switch/Paste strike state machine, and 120s 3G network-drop grace pause (`IndexedDB` persistence).
+### [PENDING] PILLAR 4: Uncle Drill Study Chat & Token Budget
+- [ ] **4.1:** Uncle's Study Room (proactive Socratic mentor on Mobile & Desktop) with Groq/Gemini router and token budget tracker.
+- [ ] **4.2:** Dual-Ledger memory integration (`profiles.episodic_memory` & `semantic_memory`).
+- [ ] **4.3:** Voice Note input/output support (Groq Whisper STT + TTS).
 
-### [PENDING] SLICE 4: The 5-Stage Drill Auditor Brain & 4-Pillar Grader
-- [ ] **4.1:** Build Stage 0 Pre-Drill Honesty Gate (`terminate_session_early`) + Gate 1 & Gate 2 deterministic sandbox runner (`--network=none`) + `forgive_minor_syntax_slip` tool.
-- [ ] **4.2:** Build Stage 1–4 Uncle Drill Harness (`AUTO` Roast Heat calculator, Stochastic Move Director, 4-Pillar Weighted Grader `>= 75%` + `100% Non-Negotiables`, and `pgvector` recall).
+### [PENDING] PILLAR 5: 5-Stage Desktop Drill Room (`v86` + `xterm.js` + `Monaco`)
+- [ ] **5.1:** Desktop-Locked 3-Panel Drill Room (`/drill/[milestoneId]`) with `xterm.js` + `v86` WebAssembly Linux, `Monaco Editor`, Voice Note mic button, and offline `man` page viewer.
+- [ ] **5.2:** Stage 0 Pre-Drill Honesty Gate (`terminate_session_early`), Gate 1 & Gate 2 deterministic sandbox execution, and Anti-Cheat strike state machine.
+- [ ] **5.3:** Stage 1–4 Uncle Drill Interrogation Engine & 4-Pillar Weighted Grader (`>= 75%` + `100% Non-Negotiables`).
 
-### [PENDING] SLICE 5: Paystack Billing, Proactive 48h Email Nudges, B2B Portal & Certificate Share Engine
-- [ ] **5.1:** Build idempotent Paystack webhook (`HMAC-SHA512`), 90%/99% Promo Code checkout, and `Inngest` 48-hour "Downloaded Manual But Ghosted" email workflow.
-- [ ] **5.2:** Build B2B Sponsor Portal (`/partner`), 2-stage Apology Letter unban pipeline, and 1-Click LinkedIn/X Certificate Share Engine.
+### [PENDING] PILLAR 6: Paystack Billing, Personal Merit Offers & Beta Feedback Loop
+- [ ] **6.1:** Idempotent Paystack webhook (`HMAC-SHA512`), ₦10,000 anchor pricing with promo/sponsor engine, and Inngest 48h Ghosting email workflow.
+- [ ] **6.2:** Two-stage Apology Letter unban pipeline, Mint-Grade Certificate sharing, and B2B Cohort Sponsor Portal (`/partner`).

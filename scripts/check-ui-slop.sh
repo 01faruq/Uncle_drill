@@ -10,5 +10,14 @@ if grep -rnE "$BANNED_PATTERNS" src/ --include="*.tsx" --include="*.ts" --includ
   exit 1
 fi
 
+echo "[UNCLE_DRILL // UI_AUDIT] Scanning for backend telemetry spoilers and forbidden jargon..."
+BANNED_STRINGS="Stochastic Move Director|RING_BUFFER|watches every command|princess|0% AI|&GT;"
+
+if grep -rnE "$BANNED_STRINGS" src/app/ src/components/ --include="*.tsx" --include="*.ts"; then
+  echo "[ERROR] TELEMETRY SPOILER OR BANNED JARGON DETECTED in student-facing UI!" >&2
+  echo "Student-facing UI must never leak telemetry details (e.g. RING_BUFFER, Stochastic Move Director), use 'princess' / '0% AI', or raw '&GT;' entity." >&2
+  exit 1
+fi
+
 echo "[PASS] Zero UI slop detected. Industrial Terminal aesthetic verified."
 exit 0

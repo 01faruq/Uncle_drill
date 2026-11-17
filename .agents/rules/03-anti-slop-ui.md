@@ -22,3 +22,10 @@ description: Enforces the Industrial Terminal & Precision HUD Design System (doc
    - Use `--font-mono` (`Geist Mono`) for all UI controls, timestamps (`[20:17:21]`), telemetry logs, and Uncle Drill chat.
    - Use `--font-sans` (`Geist Sans`) ONLY for long-form reading paragraphs inside Mental Models and Disaster Stories.
    - Every async button MUST have a disabled loading state (`[ EXECUTING... ]`) to prevent double clicks.
+
+3. **Zero Telemetry Spoilers & Zero Backend Jargon Law:**
+   - Student-facing UI must NEVER mention how terminal telemetry works (NO `Stochastic Move Director`, NO `RING_BUFFER`, NO `watches every command you type`).
+   - Student-facing UI must NEVER use `princess` or `0% AI`.
+   - NEVER expose raw promo codes publicly on pricing cards.
+   - `"use server"` files must ONLY export `async function` declarations (keep Zod schemas/constants in separate files).
+   - NEVER render unescaped raw `&GT;` entities in UI JSX.

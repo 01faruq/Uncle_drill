@@ -114,19 +114,30 @@ Uncle Drill is an AI-native **Mastery Audit & Accountability Engine**. It separa
 
 ---
 
-## 4. The Step-by-Step Build Roadmap (Vertical Slices for Google Antigravity)
+## 4. The Canonical V1 6-Pillar Production Roadmap
 
-Instead of building horizontal layers, we build V1 in **6 testable Vertical Slices** so you have a working, deployable product at the end of every slice:
+We build and ship Uncle Drill in **6 self-contained, battle-tested vertical pillars**:
 
-* **Slice 1: Foundation, Auth, URL Routing & God-Mode Engine (Days 1–4)**
-  * Next.js App Router + Supabase Auth (Email/GitHub) + `nuqs` URL state + `access_codes` table (including the **VIP God-Mode Tester Bar**).
-* **Slice 2: The Roadmap Explorer & Hybrid Commitment Contract (Days 5–7)**
-  * Public curriculum database + Phase 1 Milestone views + Commitment Contract onboarding modal + `Inngest` email reminder workflow.
-* **Slice 3: The In-Browser Linux Terminal & Telemetry Buffer (Days 8–12)**
-  * Embed `xterm.js` + `v86` WebAssembly Linux + built-in `man` page viewer + client telemetry ring-buffer + Tab-Switch/Paste Anti-Cheat listeners with 3G network-drop protection.
-* **Slice 4: The Uncle Drill AI Brain & Deterministic Grader (Days 13–17)**
-  * Private rubric tables + deterministic bash output verifier + Gemini 2.5 Flash Orchestrator + Roast Levels 1–3 + Episodic Learner Memory (`pgvector`).
-* **Slice 5: Quotas, Paystack Billing, Apology Unban Flow & Help Desk (Days 18–21)**
-  * Atomic attempt deductions + Paystack webhook with HMAC idempotency + 2-stage Apology Letter unban pipeline + Super Admin Dashboard + Bug Report widget.
-* **Slice 6: Beta Hardening, Red-Team QA & Cohort Readiness (Days 22–25)**
-  * Playwright E2E tests (Back-button verification, prompt-injection defense tests, quota race-condition tests) + Onboarding first 30–50 Beta Fellows.
+* **Pillar 1: Master Landing Page & Visual Design System [DONE]**
+  - Industrial Terminal tokens (Obsidian Dark + Blueprint Light), signature primitives (`<StructuralGrid>`, `<GridCell>`), 10-section blueprint, interactive Roast Level selector, and responsive HUD scrubber.
+* **Pillar 2: Auth, Onboarding & `/command` Control Room [DONE]**
+  - Supabase Auth (Email + Google/GitHub OAuth), 3-Question Onboarding flow, Next.js Edge Middleware (`supabase.auth.getUser()`), Desktop-only Guard for Drills, and Founder Command Room (`/command`) with live platform switches.
+* **Pillar 3: Task, Resource, Downloadable PDF Field Manual & Pre-Drill Checklist Hub [ACTIVE]**
+  - Canonical Phase 1–5 Milestone curriculum seeding, interactive `/roadmap` workspace, dedicated `/milestone/[milestoneId]` Hub with Real-World Disasters, First-Principles Mental Models, Curated Resources, 1-Click Printable/Downloadable PDF Field Manual, and Gatekeeper Checklist locking `/drill/[milestoneId]` until 100% prepared.
+* **Pillar 4: Uncle Drill Study Chat & Token Budget [PENDING]**
+  - Uncle's Study Room (proactive Socratic mentor on Mobile & Desktop), Dual-Brain Groq/Gemini router, Dual-Ledger memory recall, and Voice Notes (STT/TTS).
+* **Pillar 5: 5-Stage Desktop Drill Room [PENDING]**
+  - Desktop-locked 3-Panel Drill Room (`xterm.js` + `v86` Wasm Linux + `Monaco`), Stage 0 Honesty Gate, Stage 1–4 Uncle Drill interrogation, and 4-Pillar scoring (`>= 75%` + `100% Non-Negotiables`).
+* **Pillar 6: Paystack Billing, Personal Merit Offers & Beta Feedback Loop [PENDING]**
+  - Idempotent Paystack webhook (`HMAC-SHA512`), ₦10,000 anchor pricing with promo codes, 48h Ghosting email nudges (`Inngest`), Apology Letter redemption, and Mint-Grade Certificate sharing.
+
+---
+
+## 5. Zero Telemetry Spoilers & Zero Backend Jargon Law
+
+To maintain the mystique, authority, and realism of Uncle Drill:
+1. **No Internal Telemetry Spoilers:** Student-facing UI copy must NEVER expose internal architecture (NO `"Stochastic Move Director"`, NO `"RING_BUFFER"`, NO `"watches every command you type"`). Use authentic Uncle Drill narrative framing (e.g. `"Uncle Drill is waiting for your defense."`, `"SANDBOX: v86_LINUX_ISOLATED"`).
+2. **No Banned Buzzwords or Slop:** Student-facing UI must NEVER use `"princess"`, `"0% AI"`, or unescaped HTML entities like `&GT;`.
+3. **No Public Promo Leaks:** NEVER expose raw secret promo codes publicly on marketing pricing cards.
+4. **Clean Server Actions:** `"use server"` files must ONLY export `async function` declarations (all Zod schemas and constants must live in separate files).
+5. **Role-Gated Command Room:** The `[ COMMAND ROOM ]` link is strictly hidden from non-admin learners on `/roadmap` and all workspace headers.

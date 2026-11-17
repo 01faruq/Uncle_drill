@@ -26,3 +26,10 @@ Whenever older docs (`02`–`05`) mention "Must-Knows" or "May-Knows", ALWAYS us
 3. **TEST-DRIVEN EXECUTION (`/tdd-build`):** For all business logic (`src/modules/*`), write the failing Vitest/Playwright test first, then write the minimal code to pass it.
 4. **ANTI-SLOP GATE (`/visual-ui-audit`):** After touching any `.tsx` or `.css` file, run `bash scripts/check-ui-slop.sh` and verify the route in the browser sub-agent (checking URL state persistence on refresh and Back button navigation).
 5. **DOCUMENT & UPDATE BLACKBOARD:** Write senior-level JSDoc comments (`@purpose`, `@security`, `@reference`), log completed slices in `docs/implementation-log/`, keep `README.md` current, and update `state.md`.
+
+## 4. Zero Telemetry Spoilers & Zero Backend Jargon Law
+- Student-facing UI must NEVER mention internal terminal telemetry mechanics (NO `Stochastic Move Director`, NO `RING_BUFFER`, NO `watches every command you type`).
+- Student-facing UI must NEVER use `princess` or `0% AI`.
+- NEVER expose raw promo codes publicly on pricing cards.
+- `"use server"` files must ONLY export `async function` declarations (keep Zod schemas/constants in separate files).
+- Hide `[ COMMAND ROOM ]` from students on all workspace pages (strictly conditionally render for `role === 'SUPER_ADMIN'` or `4sulymanumar@gmail.com`).

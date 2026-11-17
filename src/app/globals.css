@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="obsidian"] {
+  /* Primary Atmosphere: Obsidian Terminal (Default) */
+  --bg-canvas: #060607;
+  --bg-surface: #0C0C0E;
+  --bg-elevated: #121216;
+  --bg-highlight: #1A1A20;
+
+  /* Structural Hairlines (1px solid) */
+  --border-subtle: #1A1A1E;
+  --border-grid: #27272C;
+  --border-focus: #F4F4F0;
+
+  /* Typography Ink */
+  --text-primary: #F4F4F0;
+  --text-secondary: #A1A1AA;
+  --text-muted: #52525B;
+  --text-inverse: #060607;
+
+  /* Semantic Signal Accents */
+  --signal-cta: #D4FF00;
+  --signal-pass: #00FF66;
+  --signal-warn: #FF9500;
+  --signal-fault: #FF2E2E;
+  --signal-info: #00E5FF;
+
+  /* Secondary Atmosphere: "Off-Grid Bone Paper" */
+  --paper-canvas: #EAE6DF;
+  --paper-surface: #E2DDD4;
+  --paper-ink: #0A0A0B;
+  --paper-border: #BDB7AD;
+
+  /* Geometry Lock */
+  --radius-none: 0px;
+}
+
+[data-theme="paper"] {
+  /* Secondary Atmosphere: "Off-Grid Bone Paper" as Primary Theme */
+  --bg-canvas: #EAE6DF;
+  --bg-surface: #E2DDD4;
+  --bg-elevated: #D8D2C7;
+  --bg-highlight: #CFC8BC;
+
+  --border-subtle: #D0C9BD;
+  --border-grid: #BDB7AD;
+  --border-focus: #0A0A0B;
+
+  --text-primary: #0A0A0B;
+  --text-secondary: #3F3F46;
+  --text-muted: #71717A;
+  --text-inverse: #F4F4F0;
+
+  --signal-cta: #0A0A0B;
+  --signal-pass: #059669;
+  --signal-warn: #D97706;
+  --signal-fault: #DC2626;
+  --signal-info: #0284C7;
+}
+
+* {
+  box-sizing: border-box;
+  border-radius: 0px !important;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Structural Dot-Matrix Grid Background */
+.dot-matrix,
+.dot-matrix-bg {
+  background-image: radial-gradient(var(--border-grid) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Custom Industrial Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+  border-left: 1px solid var(--border-grid);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-grid);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Terminal Selection Highlight */
+::selection {
+  background-color: var(--signal-cta);
+  color: var(--text-inverse);
+}
+
+/* ===========================================================================
+   INFINITE MARQUEE — Trust Logos
+   The track is doubled (JS duplicates array) to create seamless loop.
+   Hover pauses animation via animation-play-state.
+   =========================================================================== */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.trust-marquee-wrapper {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.trust-marquee-fade-left,
+.trust-marquee-fade-right {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  z-index: 2;
+  pointer-events: none;
+}
+.trust-marquee-fade-left  { left: 0; }
+.trust-marquee-fade-right { right: 0; }
+
+.trust-marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  /* width is auto-sized by doubled content; animation moves exactly half = one full set */
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+.trust-marquee-wrapper:hover .trust-marquee-track {
+  animation-play-state: paused;
+}
+
+.trust-marquee-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 2.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 140ms ease;
+}
+
+.trust-marquee-item:hover {
+  color: var(--text-primary);
+}
+
+.trust-logo-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.trust-logo-name {
+  font-family: var(--font-display), monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+
+/* ===========================================================================
+   REVIEW AVATAR — 72×72 portrait with monochrome duotone + hover clear
+   =========================================================================== */
+.review-avatar-wrapper {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border: 1px solid var(--border-grid);
+  overflow: hidden;
+}
+
+/* Monochrome duotone overlay — desaturates the vivid SVG accent colors */
+.review-avatar-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--bg-canvas);
+  opacity: 0.45;
+  mix-blend-mode: saturation;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 200ms ease;
+}
+
+/* Scanline CRT texture */
+.review-avatar-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+  transition: opacity 150ms ease;
+  background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.55) 50%);
+  background-size: 100% 4px;
+}
+
+/* On card hover: clear both the duotone desaturation and the scanline */
+.review-card:hover .review-avatar-wrapper::before {
+  opacity: 0;
+}
+.review-card:hover .review-avatar-scanline {
+  opacity: 0;
+}
+
+.review-card {
+  min-width: 320px;
+  max-width: 390px;
+  flex-shrink: 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  snap-align: start;
+  transition: border-color 150ms ease;
+}
+
+@media (min-width: 640px) {
+  .review-card { min-width: 370px; }
+}
+
+.reviews-scroll-track {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  padding-top: 0.25rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+}
+.reviews-scroll-track:active {
+  cursor: grabbing;
+}
+/* Hide scrollbar but keep scrollability */
+.reviews-scroll-track::-webkit-scrollbar { display: none; }
